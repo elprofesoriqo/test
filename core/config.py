@@ -1,7 +1,6 @@
 import os
 from typing import Any, Dict, Optional
-from pydantic import BaseSettings
-
+from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # Application settings
