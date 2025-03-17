@@ -28,11 +28,9 @@ class TicketService:
         Create a new ticket and queue it for processing.
         Return the ticket ID.
         """
-        # Generate UUID for ticket
         ticket_id = str(uuid.uuid4())
         current_time = datetime.now().isoformat()
         
-        # Create ticket object
         ticket = Ticket(
             id=ticket_id,
             question=question,
@@ -41,11 +39,9 @@ class TicketService:
             updated_at=current_time
         )
         
-        # Save ticket to database
         await self.ticket_repository.save_ticket(ticket)
         logger.info(f"Created ticket {ticket_id}")
         
-        # Send message to processing queue
         await self.message_producer.publish("ticket.created", {"ticket_id": ticket_id})
         logger.info(f"Queued ticket {ticket_id} for processing")
         
@@ -97,7 +93,6 @@ class TicketService:
         logger.info(f"Updated ticket {ticket_id} with answer and status DONE")
 
 
-# Factory function
 def get_ticket_service():
     """Factory function to create and return a ticket service instance"""
     return TicketService()

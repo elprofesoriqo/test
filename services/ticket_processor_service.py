@@ -20,17 +20,12 @@ class TicketProcessor:
     async def process_ticket(self, ticket_id: str) -> None:
         """Process a ticket by sending it to LLM and updating the ticket"""
         try:
-            # Get ticket data
             ticket = await self.ticket_service.get_ticket_data(ticket_id)
-            
-            # Update status to PROCESSING
             await self.ticket_service.update_ticket_status(ticket_id, TicketStatus.PROCESSING)
             logger.info(f"Processing ticket {ticket_id}")
             
-            # Send question to LLM
             answer = await self.llm_service.process_query(ticket.question)
             
-            # Update ticket with answer and set status to DONE
             await self.ticket_service.update_ticket_answer(ticket_id, answer)
             logger.info(f"Completed processing ticket {ticket_id}")
             
@@ -42,7 +37,6 @@ class TicketProcessor:
         logger.info("Starting ticket processor service")
         
         try:
-            # Subscribe to ticket.created events
             async for message in self.message_consumer.subscribe("ticket.created"):
                 ticket_id = message.get("ticket_id")
                 if ticket_id:

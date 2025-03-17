@@ -15,7 +15,6 @@ class LLMService(LLMServiceInterface):
     async def process_query(self, query: str) -> str:
         """Process query using LLM and return the answer"""
         try:
-            # Actual LLM API call would happen here
             response = await self.llm_client.generate(prompt=query)
             return response.text
         except Exception as e:
@@ -31,11 +30,9 @@ class LLMService(LLMServiceInterface):
             await on_complete(result)
         except Exception as e:
             logger.error(f"Error in process_query_with_callback: {str(e)}")
-            # We might want to call the callback with an error message
             await on_complete(f"Error processing query: {str(e)}")
 
 
-# Factory function
 def get_llm_service(llm_client=None):
     """Factory function to create and return an LLM service instance"""
     from infrastructure.llm.mock_llm_client import MockLLMClient
